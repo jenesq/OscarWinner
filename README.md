@@ -5,10 +5,14 @@ This dataset contains over  reports of Movie nominations and winners dating back
 
 ## Project Description    
 
-This project for my Data Science practicum II. I collected the Movie data by downloading three datasets from the NUFORC the following websites:     
-
- 
-
+This project is for my Data Science practicum II. I thought it woudld be a fun project to practice my skills on.   
+I collected the Movie data by downloading three datasets from the following websites:     
+    
+https://www.kaggle.com/theacademy/academy-awards/data    
+https://www.statcrunch.com/app/index.php?dataid=1736023    
+https://www.statcrunch.com/app/index.php?dataid=1958225    
+https://www.statcrunch.com/5.0/shareddata.php?keywords=movies    
+    
 My inspiration was to answer the following questions:    
 - 
 
