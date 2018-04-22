@@ -16,9 +16,16 @@ My inspiration was to answer the following questions:
 
 The three datasets were user friendly and little effort was needed to start coding.     
 
+Dataset 1: Academy Awards - 8,381 observations and 6 variables    
+Dataset 2: Budget/Earnings - 5,222 observations and 7 variables    
+Dataset 3: IMDB - 58,786 observations and 25 variables    
+    
+Dataset 4: Combined Dataset - 2,143 observations and 36 variables    
 
+I completed this project using R and Tableau.  The joining of tables, GLM and Neuralnet were built within R.  The exploratory data was completed in Tableau.  
 
-I completed this project using R.  The exploratory data was completed in Tableau and the prediction code was doen with R.  The data columns in the final combined dataset are         .          
+The data columns in the final combined dataset are (movieid,	title,	year,	length,	budget,	rating,	votes,	r1,	r2,	r3,	r4,	r5,	r6,	r7,	r8,	r9, r10,	mpaa,	Action,	Animation,	Comedy,	Drama,	Documentary,	Romance,	Short,	Month,	Day,	ReleaseYear,	Budget($M),	DomesticGross($M),	WorldwideGross($M),	AwardYear,	AwardCeremony,	AwardType,	AwardWinner,	AwardNomineeName.    
+        .          
   
 ## Combine Data sets with SQl:    
 data = sqldf("SELECT IMDB.*,BudEarn.* FROM IMDB    
