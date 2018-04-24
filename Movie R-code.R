@@ -16,10 +16,6 @@ library(ipred)
 
 
 #Load Data Sets
-BudEarn <- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/Budget-Earnings.xlsx")
-IMDB <- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/IMDB.xlsx")
-Academy<- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/AcademyAwards.xlsx")
-
 BudEarn <- read_excel("C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/Budget-Earnings.xlsx")
 str(BudEarn)
 IMDB <- read_excel("C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/IMDB.xlsx")
