@@ -1,16 +1,25 @@
 #Packages
 install.packages("sqldf")
 install.packages("lubridate")
+install.packages("neuralnet")
+install.packages("caret")
+install.packages("ipred")
 library(sqldf)
 library(readxl)
 library(lubridate)
 library(caTools)
 library(caret)
 library(MASS)
+library(neuralnet)
+library(caret)
+library(ipred)
 
 
 #Load Data Sets
-library(readxl)
+BudEarn <- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/Budget-Earnings.xlsx")
+IMDB <- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/IMDB.xlsx")
+Academy<- read_excel("/Users/matthewarcher/Google Drive/Jenny Shared/MovieData/AcademyAwards.xlsx")
+
 BudEarn <- read_excel("C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/Budget-Earnings.xlsx")
 str(BudEarn)
 IMDB <- read_excel("C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/IMDB.xlsx")
@@ -25,13 +34,10 @@ data = sqldf("SELECT data.*,Academy.* FROM data
 INNER JOIN Academy ON data.title = Academy.FilmName")
 data$FilmName=NULL
 data
-
 str(data)
 summary(data)
-
-
 #Export dataset to excel to make sure it is what I want
-write.csv(data, "/Users/Jenny Esquibel\Dropbox\Jenny Folder\Data Science Masters\MSDS 696 - Practicum II/CurrentMovieData.csv")
+write.csv(data, "/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.csv")
 
 #Checking and adjusting variable types
 str(data)
@@ -114,70 +120,62 @@ cor2 = function(df){
 }
 cor2(df)
 
-#Step AIC - to remove any unecessary variables
+#Step AIC
 df$AwardWinner=as.numeric(df$AwardWinner)
 AICMod <- glm(AwardWinner ~ ., data=df)
 modelAward.AIC <- stepAIC(AICMod, direction=c("both"))
 modelAward.AIC
-
 #Used the AIC results to select variables for glm
 str(df)
 df2=df[,c(1,2,3,4,7,11,12,13,16,17)]
 str(df2)
 
 #GLM Model For AwardWinner w/AIC
-df2$AwardWinner=as.numeric(df2$AwardWinner)
-df2 <- df2[sample(1:nrow(df2)), ]
+df2$AwardWinner[df2$AwardWinner == "1"] = "0"
+df2$AwardWinner[df2$AwardWinner == "2"] = "1"
+df2$AwardWinner=as.factor(df2$AwardWinner)
 split = sample.split(df2$AwardWinner, SplitRatio = 0.7)
 trainset = subset(df2, split == TRUE)
 testset = subset(df2, split == FALSE)
-modelAward <- glm(AwardWinner ~ ., data=trainset)
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")
 summary(modelAward)
 
 predAward<-predict(modelAward,testset)
-predAward2<- ifelse(c(predAward) > 1.40,1,0)
+predAward2<- ifelse(c(predAward) > 0,1,0)
 predictAward3=as.vector(predAward2)
-testset$AwardWinner[testset$AwardWinner == "1"] = "0"
-testset$AwardWinner[testset$AwardWinner == "2"] = "1"
 table(testset$AwardWinner, predictAward3)
-AccuracyAIC <-(201+84)/(201+84+33+277)
+AccuracyAIC <-(250+54)/(250+54+87+38)
 AccuracyAIC
 
 #GLM Model For AwardWinner w/o AIC
-df$AwardWinner=as.numeric(df$AwardWinner)
+df$AwardWinner[df$AwardWinner == "1"] = "0"
+df$AwardWinner[df$AwardWinner == "2"] = "1"
+df$AwardWinner=as.factor(df$AwardWinner)
 split = sample.split(df$AwardWinner, SplitRatio = 0.8)
 trainset = subset(df, split == TRUE)
 testset = subset(df, split == FALSE)
-modelAward <- glm(AwardWinner ~ ., data=trainset)
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")
 summary(modelAward)
-
-predAward<-predict.glm(modelAward,testset)
-predAward2<- ifelse(c(predAward) > 1.40,1,0)
+predAward<-predict(modelAward,testset)
+predAward2<- ifelse(c(predAward) > 0,1,0)
 predictAward3=as.vector(predAward2)
-testset$AwardWinner[testset$AwardWinner == "1"] = "0"
-testset$AwardWinner[testset$AwardWinner == "2"] = "1"
 table(testset$AwardWinner, predictAward3)
-AccuracyLM <-(134+51)/(134+51+48+40)
-AccuracyLM
+AccuracyAIC <-(166+37)/(166+37+65+26)
+AccuracyAIC
 
-
-#Random Forest Model
+#Random Forest Model Grid Search
 df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
+df=na.exclude(df)
 df$Domestic=as.vector(df$`DomesticGross($M)`)
 df$WorldWide=as.vector(df$`WorldwideGross($M)`)
 df$`DomesticGross($M)`=NULL
 df$`WorldwideGross($M)`=NULL
-df=na.exclude(df)
-split = sample.split(df$AwardWinner, SplitRatio = 0.7)
-trainset = subset(df, split == TRUE)
-testset = subset(df, split == FALSE)
-RFMod <- randomForest(as.factor(AwardWinner) ~.,
-                      data=trainset, 
-                      ntree=5000)
-RFPred <- predict(RFMod, testset)
-table(testset$AwardWinner, RFPred)
-AccuracyRF=(226+71)/(226+71+72+51)
-AccuracyRF
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
+tunegrid <- expand.grid(.mtry=c(1:15))
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid=tunegrid, trControl=control)
+print(rf_gridsearch)
+plot(rf_gridsearch)
+
 
 #Subset for 1990 on:
 dataModern <-subset(data, ReleaseYear >="1990")
@@ -252,61 +250,48 @@ modelAward.AIC <- stepAIC(AICMod, direction=c("both"))
 modelAward.AIC
 #Used the AIC results to select variables for glm - Modern Data
 str(df)
-AwardWinner ~ length + budget + rating + Action + Animation + 
-  Romance + ReleaseYear + `WorldwideGross($M)`
 df2=df[,c(1,2,3,4,7,8,11,13,17)]
 str(df2)
 
 #GLM Model For AwardWinner w/AIC -Modern Data
-df2$AwardWinner=as.numeric(df2$AwardWinner)
-df2 <- df2[sample(1:nrow(df2)), ]
+df2$AwardWinner[df2$AwardWinner == "1"] = "0"
+df2$AwardWinner[df2$AwardWinner == "2"] = "1"
+df2$AwardWinner=as.factor(df2$AwardWinner)
 split = sample.split(df2$AwardWinner, SplitRatio = 0.7)
 trainset = subset(df2, split == TRUE)
 testset = subset(df2, split == FALSE)
-modelAward <- glm(AwardWinner ~ ., data=trainset)
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")
 summary(modelAward)
-
 predAward<-predict(modelAward,testset)
-predAward2<- ifelse(c(predAward) > 1.40,1,0)
+predAward2<- ifelse(c(predAward) > 0,1,0)
 predictAward3=as.vector(predAward2)
-testset$AwardWinner[testset$AwardWinner == "1"] = "0"
-testset$AwardWinner[testset$AwardWinner == "2"] = "1"
 table(testset$AwardWinner, predictAward3)
-AccuracyAIC <-(121+21)/(121+21+35+22)
+AccuracyAIC <-(146+15)/(146+15+42+4)
 AccuracyAIC
 
-#GLM Model For AwardWinner w/o AIC
-df$AwardWinner=as.numeric(df$AwardWinner)
-split = sample.split(df$AwardWinner, SplitRatio = 0.7)
-trainset = subset(df, split == TRUE)
-testset = subset(df, split == FALSE)
-modelAward <- glm(AwardWinner ~ ., data=trainset)
-summary(modelAward)
 
-predAward<-predict.glm(modelAward,testset)
-predAward2<- ifelse(c(predAward) > 1.40,1,0)
-predictAward3=as.vector(predAward2)
-testset$AwardWinner[testset$AwardWinner == "1"] = "0"
-testset$AwardWinner[testset$AwardWinner == "2"] = "1"
-table(testset$AwardWinner, predictAward3)
-AccuracyLM <-(132+24)/(132+24+31+16)
-AccuracyLM
-
-
-#Random Forest Model
+#Random Forest Model-Modern data
 df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
+df=na.exclude(df)
 df$Domestic=as.vector(df$`DomesticGross($M)`)
 df$WorldWide=as.vector(df$`WorldwideGross($M)`)
 df$`DomesticGross($M)`=NULL
 df$`WorldwideGross($M)`=NULL
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
+tunegrid <- expand.grid(.mtry=c(1:15))
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid=tunegrid, trControl=control)
+print(rf_gridsearch)
+plot(rf_gridsearch)
+
+#Neural Network Model-Modern data
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
 df=na.exclude(df)
-split = sample.split(df$AwardWinner, SplitRatio = 0.7)
-trainset = subset(df, split == TRUE)
-testset = subset(df, split == FALSE)
-RFMod <- randomForest(as.factor(AwardWinner) ~.,
-                      data=trainset, 
-                      ntree=5000)
-RFPred <- predict(RFMod, testset)
-table(testset$AwardWinner, RFPred)
-AccuracyRF=(131+27)/(131+27+32+22)
-AccuracyRF
+df$Domestic=as.vector(df$`DomesticGross($M)`)
+df$WorldWide=as.vector(df$`WorldwideGross($M)`)
+df$`DomesticGross($M)`=NULL
+df$`WorldwideGross($M)`=NULL
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
+grid <- expand.grid(size=c(5,10,20,50), k=c(1,2,3,4,5))
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="lvq", tuneGrid=grid, trControl=control,  tuneLength=5)
+print(rf_gridsearch)
+plot(rf_gridsearch)
