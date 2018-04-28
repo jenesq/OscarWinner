@@ -24,11 +24,11 @@ https://www.statcrunch.com/5.0/shareddata.php?keywords=movies
 
 The three datasets were user friendly and little effort was needed to start coding.     
 
-Dataset 1: Academy Awards - 8,381 observations and 6 variables    
-Dataset 2: Budget/Earnings - 5,222 observations and 7 variables    
-Dataset 3: IMDB - 58,786 observations and 25 variables    
+- Dataset 1: Academy Awards - 8,381 observations and 6 variables    
+- Dataset 2: Budget/Earnings - 5,222 observations and 7 variables    
+- Dataset 3: IMDB - 58,786 observations and 25 variables    
     
-Dataset 4: Combined Dataset - 2,143 observations and 36 variables    
+- Dataset 4: Combined Dataset - 2,143 observations and 36 variables    
 
 I completed this project using R and Tableau.  The joining of tables, GLM and Neuralnet were built within R.  The exploratory data was completed in Tableau.  
 
