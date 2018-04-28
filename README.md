@@ -1,7 +1,7 @@
 
 # Predicting the Future Oscar Winners from Known Nominations
 
-This project has three datasets with over 72,000 rows of data for movie nominations and winners dating back to 1903.    
+This project used three datasets with over 72,000 rows of data for movie nominations and winners dating back to 1903.    
 
 ## Project Description    
 
