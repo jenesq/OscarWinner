@@ -13,8 +13,12 @@ https://www.statcrunch.com/app/index.php?dataid=1736023
 https://www.statcrunch.com/app/index.php?dataid=1958225    
 https://www.statcrunch.com/5.0/shareddata.php?keywords=movies    
     
-My inspiration was to answer the following questions:    
-- 
+My project inspiration was to answer the following questions:    
+-Build a model that predicts the next Oscar in any Academy Award category by inputting the nominated movies.    
+-What variables are significant in predicting an Oscar winning movie?    
+-Are movie rankings directly correlated to Oscar winning movies?    
+-Are there any trends between movie genre and sales?    
+-Is there a relationship between IMDB rating, number of votes, and Oscar winners?    
 
 ## Observations on the quality of the data    
 
