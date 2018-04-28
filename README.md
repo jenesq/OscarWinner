@@ -5,10 +5,11 @@ This project used three datasets with over 72,000 rows of data for movie nominat
 
 ## Project Description    
 
-I completed this project for my Data Science practicum II. I thought it woudld be a fun project to practice my skills on.   
-Four datasets were used for this project.  Three of the datasets were downloaded from www.statcruch.com.  The Academy Awards dataset was downloaded from https://www.kaggle.com/theacademy/academy-awards/data.     
+I completed this project for my Data Science practicum II. I thought it would be a fun project to practice my skills on.   
+I anlayzed four datasets to complete this project.  Three of the datasets were downloaded from www.statcruch.com.  The Academy Awards dataset was downloaded from https://www.kaggle.com/theacademy/academy-awards/data.     
        
-## My project inspiration was to answer the following questions:    
+## Project Inspiration   
+My project inspiration was to answer the following questions:    
 - Build a model that predicts the next Oscar in any Academy Award category by inputting the nominated movies.    
 - What variables are significant in predicting an Oscar winning movie?    
 - Are movie rankings directly correlated to Oscar winning movies?    
@@ -16,7 +17,6 @@ Four datasets were used for this project.  Three of the datasets were downloaded
 - Is there a relationship between IMDB rating, number of votes, and Oscar winners?    
 
 ## Observations on the quality of the data    
-
 The three datasets were user friendly and clean.     
 - Dataset 1: Academy Awards - 8,381 observations and 6 variables      
 - Dataset 2: Budget/Earnings - 5,222 observations and 7 variables     
