@@ -1,18 +1,13 @@
 
-# Predicting the Next Oscar Winner
+# Predicting the Future Oscar Winners from Known Nominations
 
-This dataset contains over  reports of Movie nominations and winners dating back to .    
+This project has three datasets with over 72,000 rows of data for movie nominations and winners dating back to 1903.    
 
 ## Project Description    
 
-This project is for my Data Science practicum II. I thought it woudld be a fun project to practice my skills on.   
-I collected the Movie data by downloading three datasets from the following websites:     
-    
-https://www.kaggle.com/theacademy/academy-awards/data    
-https://www.statcrunch.com/app/index.php?dataid=1736023    
-https://www.statcrunch.com/app/index.php?dataid=1958225    
-https://www.statcrunch.com/5.0/shareddata.php?keywords=movies    
-    
+I completed this project for my Data Science practicum II. I thought it woudld be a fun project to practice my skills on.   
+Four datasets were used for this project.  Three of the datasets were downloaded from www.statcruch.com.  The Academy Awards dataset was downloaded from https://www.kaggle.com/theacademy/academy-awards/data.     
+       
 ## My project inspiration was to answer the following questions:    
 - Build a model that predicts the next Oscar in any Academy Award category by inputting the nominated movies.    
 - What variables are significant in predicting an Oscar winning movie?    
@@ -22,19 +17,17 @@ https://www.statcrunch.com/5.0/shareddata.php?keywords=movies
 
 ## Observations on the quality of the data    
 
-The three datasets were user friendly and little effort was needed to start coding.     
-- Dataset 1: Academy Awards - 8,381 observations and 6 variables    
-- Dataset 2: Budget/Earnings - 5,222 observations and 7 variables    
-- Dataset 3: IMDB - 58,786 observations and 25 variables    
+The three datasets were user friendly and clean.     
+- Dataset 1: Academy Awards - 8,381 observations and 6 variables      
+- Dataset 2: Budget/Earnings - 5,222 observations and 7 variables     
+- Dataset 3: IMDB - 58,786 observations and 25 variables        
     
+The fourth dataset was created in R using SQL by bringing together the three above datasets.        
 - Dataset 4: Combined Dataset - 2,143 observations and 36 variables    
     
 I completed this project using R and Tableau.  The joining of tables, GLM and Neuralnet were built within R.  The exploratory data was completed in Tableau.  
-
-The data columns in the final combined dataset are (movieid,	title,	year,	length,	budget,	rating,	votes,	r1,	r2,	r3,	r4,	r5,	r6,	r7,	r8,	r9, r10,	mpaa,	Action,	Animation,	Comedy,	Drama,	Documentary,	Romance,	Short,	Month,	Day,	ReleaseYear,	Budget($M),	DomesticGross($M),	WorldwideGross($M),	AwardYear,	AwardCeremony,	AwardType,	AwardWinner,	AwardNomineeName.    
-        .          
-  
-## Combine the three datasets using a SQL command:    
+    
+I used the following code in order to combine the three datasets:    
 data = sqldf("SELECT IMDB.*,BudEarn.* FROM IMDB    
 INNER JOIN BudEarn ON IMDB.Title = BudEarn.Movie")    
 str(data)    
@@ -44,9 +37,11 @@ INNER JOIN Academy ON data.title = Academy.FilmName")
 data$FilmName=NULL    
 data    
 str(data)    
-summary(data)    
+summary(data) 
 
-
+The data columns in the final combined dataset are: movieid, title,	year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6, r7,	r8,	r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M), domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.      
+           
+  
 ## Export dataset to excel to make sure it is what I want    
 write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx")    
         
