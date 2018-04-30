@@ -74,19 +74,19 @@ dim(data)
 str(data)     
    
    
-### Building the Models:    
+## Building the Models:    
 
 I needed the following libraries to run my models:    
-install.packages("sqldf")    
-install.packages("lubridate")    
-library(sqldf)    
-library(readxl)    
-library(lubridate)    
-library(caTools)    
-library(caret)    
-library(MASS)       
+   install.packages("sqldf")    
+   install.packages("lubridate")    
+   library(sqldf)    
+   library(readxl)    
+   library(lubridate)    
+   library(caTools)    
+   library(caret)    
+   library(MASS)       
        
-The models were designed in two phasees:    
+### The models were designed in two phasees:    
 Phase 1: Includes data in each year provided by websites   
 - SQL to combine the three datasets    
 - Correlation Model with all data years    
@@ -103,7 +103,6 @@ Phase 2: Includes only data from 1990 on (Modern Data)
 - Random Forest Model with Grid Search    
 - Neural Network    
    
-      
 #### Correlation Matrix
 Phase 1: Looked at all years and used all variables.  The following varaibles were highly correlated:    
        - Domestic($M) and Worldwid($M) = .967
@@ -122,14 +121,14 @@ Phase 2: Modern data and used all variables. The following varaibles 9 variables
 
     
 #### GLM Models    
-Phase 1:   
+Phase 1: All Data       
 - Running with only the AIC variables:    
    - Accuracy = .708 ~ 71%    
    
 - Running with all original variables:    
    - Accuracy = .690 ~ 69%    
     
-Phase 2:   
+Phase 2: Modern Data    
 - Running with only the AIC variables:    
    - Accuracy = .725 ~ 73%    
    
@@ -137,21 +136,21 @@ Phase 2:
    - Accuracy = .690 ~ 69%    
    
 #### Random Forest Models    
-Phase 1:    
+Phase 1: All Data       
 - Running with all original variables:    
    - Accuracy = .706 ~ 71%    
     
-Phase 2:    
+Phase 2:  Modern Data     
 - Running with all original variables:     
    - Accuracy = .747 ~ 75%    
 
 #### Neural Network with the Modern Data
-Phase 1:    
-- I did not need to run with all the variables   
+Phase 1: All Data      
+- I did not run with all the data.  
     
-Phase 2:    
+Phase 2: Modern Data   
 - Running with all original variables:     
-   - Accuracy = .747 ~ 75%   
+   - Accuracy = .660 ~ 66%   
 
 
 ## Analysis results    
