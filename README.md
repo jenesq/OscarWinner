@@ -29,8 +29,8 @@ The fourth dataset was created in R using SQL by bringing together the three abo
 I completed this project using R and Tableau.  The joining of tables, (GLM) Regression, Random Forest, and a Neuralnet were built within R.  The exploratory data was completed in Tableau.  
 
 ## Data cleaning and preparation
-- Data Preparation    
-I used the following code in order to combine the three datasets:    
+Data Preparation    
+- I used the following code in order to combine the three datasets:    
     data = sqldf("SELECT IMDB.*,BudEarn.* FROM IMDB    
     INNER JOIN BudEarn ON IMDB.Title = BudEarn.Movie")    
     str(data)    
@@ -39,13 +39,18 @@ I used the following code in order to combine the three datasets:
     INNER JOIN Academy ON data.title = Academy.FilmName")    
     data$FilmName=NULL    
     data     
+    
+- Viewing the data:     
     str(data)    
-    summary(data) 
+    summary(data)      
       
-   - The final data variables in the combined dataset are: movieid, title, year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6,  r7, r8, r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M),       domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.  
-
+The final data variables in the combined dataset are: movieid, title, year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6,  r7, r8, r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M),       domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.  
+    
+Exporting dataset to excel to make sure it is what I want and to use for EDA in Tableau    
+    write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx") 
+    
 - Data Cleaning
-I had variables that needed to be converted:       
+I quickly realized I had variables that needed to be converted when I looked at the structure:       
     str(data)    
     data$budget=as.numeric(data$budget)    
     data$mpaa=as.factor(data$mpaa)    
@@ -67,44 +72,30 @@ I had variables that needed to be converted:
     dim(data)    
     str(data)     
   
-    
-           
-  
-## Export dataset to excel to make sure it is what I want    
-write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx")    
-        
 ## Exploratory Data Analysis (EDA):    
 Most of the data exploration was performed in Tableau and moved to Tableu Public.  All chart descriptions are in the TableauPublic Charts.md file in this project.  The direct link to Tableau Public page is https://public.tableau.com/profile/jenny6450#!/.    
 
-A few of the charts are in the data analysis section of this project.    
-
-  
-    
-
-   
-   
-## Building the Models:    
-
+## Building the Models in R:    
 I needed the following libraries to run my models:    
-   install.packages("sqldf")    
-   install.packages("lubridate")    
-   library(sqldf)    
-   library(readxl)    
-   library(lubridate)    
-   library(caTools)    
-   library(caret)    
-   library(MASS)       
+    library(sqldf)
+    library(readxl)
+    library(lubridate)
+    library(caTools)
+    library(caret)
+    library(MASS)
+    library(neuralnet)
+    library(caret)
+    library(ipred)      
        
 ### The models were designed in two phasees:    
-Phase 1: Includes data in each year provided by websites   
-- SQL to combine the three datasets    
-- Correlation Model with all data years    
+Phase 1: (Includes data in all years listed in the dataset)   
+- Correlation Model  
 - Step AIC    
 - GLM Model with AIC    
 - GLM MOdel without AIC    
 - Random Forest Model with Grid Search    
     
-Phase 2: Includes only data from 1990 on (Modern Data)    
+Phase 2: Includes only the data from 1990 on (Modern Data)    
 - Correclaton Model with a subet of data for 1990 on    
 - Step AIC    
 - GLM Model with AIC     
@@ -113,20 +104,150 @@ Phase 2: Includes only data from 1990 on (Modern Data)
 - Neural Network    
    
 #### Correlation Matrix
-Phase 1: Looked at all years and used all variables.  The following varaibles were highly correlated:    
+Phase 1: Looked at all years and used all variables.  
+    
+Correlations#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
+df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
+str(df)    
+cor2 = function(df){    
+      
+  stopifnot(inherits(df, "data.frame"))    
+  stopifnot(sapply(df, class) %in% c("integer"    
+                                     , "numeric"    
+                                     , "factor"    
+                                     , "character"))    
+      
+  cor_fun <- function(pos_1, pos_2){    
+    
+    # both are numeric    
+    if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_2]]) %in% c("integer", "numeric")){    
+      r <- stats::cor(df[[pos_1]]    
+                      , df[[pos_2]]    
+                      , use = "pairwise.complete.obs"    
+      )    
+    }    
+        
+    # one is numeric and other is a factor/character    
+    if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_2]]) %in% c("factor", "character")){    
+      r <- sqrt(    
+        summary(    
+          stats::lm(df[[pos_1]] ~ as.factor(df[[pos_2]])))[["r.squared"]])    
+    }    
+        
+    if(class(df[[pos_2]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_1]]) %in% c("factor", "character")){    
+      r <- sqrt(    
+        summary(    
+          stats::lm(df[[pos_2]] ~ as.factor(df[[pos_1]])))[["r.squared"]])    
+    }    
+        
+    # both are factor/character    
+    if(class(df[[pos_1]]) %in% c("factor", "character") &&    
+       class(df[[pos_2]]) %in% c("factor", "character")){    
+      r <- lsr::cramersV(df[[pos_1]], df[[pos_2]], simulate.p.value = TRUE)    
+    }    
+        
+    return(r)    
+  }     
+      
+  cor_fun <- Vectorize(cor_fun)    
+      
+  # now compute corr matrix    
+  corrmat <- outer(1:ncol(df)    
+                   , 1:ncol(df)    
+                   , function(x, y) cor_fun(x, y)    
+  )    
+      
+  rownames(corrmat) <- colnames(df)    
+  colnames(corrmat) <- colnames(df)    
+      
+  return(corrmat)    
+}    
+cor2(df)     
+    
+The model tagged the following varaibles as highly correlated:  
        - Domestic($M) and Worldwid($M) = .967
        - Award Ceremony & Award Type = .761    
        
-Phase 2: Modern data and used all variables. The following variables were highly correlated:   
-       - Domestic($M) and Worldwid($M) = .967    
-       - Award Ceremony & Award Type = .761     
+Phase 2: Modern data and used all variables.    
+    
+#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
+str(df)    
+cor2 = function(df){    
+      
+  stopifnot(inherits(df, "data.frame"))    
+  stopifnot(sapply(df, class) %in% c("integer"    
+                                     , "numeric"    
+                                     , "factor"    
+                                     , "character"))    
+      
+  cor_fun <- function(pos_1, pos_2){    
+        
+    # both are numeric    
+    if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_2]]) %in% c("integer", "numeric")){    
+      r <- stats::cor(df[[pos_1]]    
+                      , df[[pos_2]]    
+                      , use = "pairwise.complete.obs"    
+      )    
+    }    
+        
+    # one is numeric and other is a factor/character    
+    if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_2]]) %in% c("factor", "character")){    
+      r <- sqrt(    
+        summary(    
+          stats::lm(df[[pos_1]] ~ as.factor(df[[pos_2]])))[["r.squared"]])    
+    }    
+        
+    if(class(df[[pos_2]]) %in% c("integer", "numeric") &&    
+       class(df[[pos_1]]) %in% c("factor", "character")){    
+      r <- sqrt(    
+        summary(    
+          stats::lm(df[[pos_2]] ~ as.factor(df[[pos_1]])))[["r.squared"]])    
+    }    
+        
+    # both are factor/character    
+    if(class(df[[pos_1]]) %in% c("factor", "character") &&   
+       class(df[[pos_2]]) %in% c("factor", "character")){    
+      r <- lsr::cramersV(df[[pos_1]], df[[pos_2]], simulate.p.value = TRUE)    
+    }   
+        
+    return(r)    
+  }     
+      
+  cor_fun <- Vectorize(cor_fun)    
+      
+  # now compute corr matrix    
+  corrmat <- outer(1:ncol(df)    
+                   , 1:ncol(df)    
+                   , function(x, y) cor_fun(x, y)    
+  )    
+      
+  rownames(corrmat) <- colnames(df)    
+  colnames(corrmat) <- colnames(df)    
+      
+  return(corrmat)    
+}    
+cor2(df)    
+    
+    
+The model for the modern dataset flagged teh following variables as highly correlated:   
+- Domestic($M) and Worldwid($M) = .967      
+- Award Ceremony & Award Type = .761     
     
 
 #### Step AIC    
-Phase 1: Looked at all years and used all variables.  The following varaibles 10 variables were selected from the original 17 variables.        - AwardWinner, length, budget, rating, action, romance, month, releaseYear, AwardType, worldwideGross($M)    
+Phase 1: (Includes data in all years listed in the dataset).  
+The following 10 variables were selected from the original 17 variables after the Step AIC process:       
+- AwardWinner, length, budget, rating, action, romance, month, releaseYear, AwardType, worldwideGross($M)    
     
-Phase 2: Modern data and used all variables. The following varaibles 9 variables were selected from the original 17 variables.     
-       - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
+Phase 2: Modern data using inputting all 17 variables. 
+he following 9 variables were selected from the original 17 variables after the Step AIC process:    
+- AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
 
     
 #### GLM Models    
