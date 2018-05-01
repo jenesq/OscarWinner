@@ -261,22 +261,24 @@ df$AwardWinner=as.numeric(df$AwardWinner)
 AICMod <- glm(AwardWinner ~ ., data=df)    
 modelAward.AIC <- stepAIC(AICMod, direction=c("both"))    
 modelAward.AIC    
-
-
-
-The following 9 variables were selected from the original 17 variables after the Step AIC process:    
-- AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
+    
+    
+![image](https://user-images.githubusercontent.com/36289126/39460913-5a491fce-4cc4-11e8-98bb-32cc33b685a6.png)    
+    
+        
+**The following 9 variables were selected from the original 17 variables after the Step AIC process**:          
+- AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)        
 
     
 #### GLM Models    
-Phase 1: All Data       
+**Phase 1**: All Data       
 - Running with only the AIC variables:    
    - Accuracy = .708 ~ 71%    
    
 - Running with all original variables:    
    - Accuracy = .690 ~ 69%    
     
-Phase 2: Modern Data    
+**Phase 2**: Modern Data    
 - Running with only the AIC variables:    
    - Accuracy = .725 ~ 73%    
    
@@ -284,19 +286,19 @@ Phase 2: Modern Data
    - Accuracy = .690 ~ 69%    
    
 #### Random Forest Models    
-Phase 1: All Data       
+**Phase 1**: All Data       
 - Running with all original variables:    
    - Accuracy = .706 ~ 71%    
     
-Phase 2:  Modern Data     
+**Phase 2**:  Modern Data     
 - Running with all original variables:     
    - Accuracy = .747 ~ 75%    
 
 #### Neural Network with the Modern Data
-Phase 1: All Data      
+**Phase 1**: All Data      
 - I did not run with all the data.  
     
-Phase 2: Modern Data   
+**Phase 2**: Modern Data   
 - Running with all original variables:     
    - Accuracy = .660 ~ 66%   
 
