@@ -107,7 +107,7 @@ I needed the following libraries to run my models:
 dataModern <-subset(data, ReleaseYear >="1990")   
 str(dataModern)   
    
-#### Correlation Matrix    
+### Correlation Matrix    
 **Phase 1**: Looked at all years and used all variables.   
     
 #Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):     
@@ -244,7 +244,7 @@ cor2(df)
 - Award Ceremony & Award Type = .761     
     
     
-#### Step AIC    
+### Step AIC    
 **Phase 1**: (Includes data in all years listed in the dataset)  
     
 df$AwardWinner=as.numeric(df$AwardWinner)    
@@ -274,7 +274,7 @@ modelAward.AIC
 - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)        
     
     
-#### GLM Models    
+### GLM Models    
 **Phase 1**: All Data       
 - **Running with only the AIC variables**:   
 str(df)    
@@ -347,7 +347,7 @@ AccuracyAIC
 - Running with all original variables:    
    - Accuracy = .690 ~ 69%    
    
-#### Random Forest Models      
+### Random Forest Models      
 **Phase 1**: All Data       
 Running with all original variables:      
     
@@ -392,7 +392,7 @@ plot(rf_gridsearch)
     
    - Accuracy = .755 ~ 76%    
     
-#### Neural Network with the Modern Data    
+### Neural Network with the Modern Data    
 **Phase 1**: All Data      
 I did not run with all the data.  
     
