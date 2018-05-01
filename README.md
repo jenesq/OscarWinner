@@ -339,26 +339,27 @@ AccuracyAIC
 - Running with all original variables:    
    - Accuracy = .690 ~ 69%    
    
-#### Random Forest Models    
+#### Random Forest Models      
 **Phase 1**: All Data       
-- Running with all original variables:  
-
-df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]
-df=na.exclude(df)
-df$Domestic=as.vector(df$`DomesticGross($M)`)
-df$WorldWide=as.vector(df$`WorldwideGross($M)`)
-df$`DomesticGross($M)`=NULL
-df$`WorldwideGross($M)`=NULL
-control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
-tunegrid <- expand.grid(.mtry=c(1:15))
-rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid=tunegrid, trControl=control)
-print(rf_gridsearch)
-
+- Running with all original variables:      
+    
+df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
+df=na.exclude(df)    
+df$Domestic=as.vector(df$`DomesticGross($M)`)    
+df$WorldWide=as.vector(df$`WorldwideGross($M)`)    
+df$`DomesticGross($M)`=NULL     
+df$`WorldwideGross($M)`=NULL    
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")    
+tunegrid <- expand.grid(.mtry=c(1:15))    
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid=tunegrid, trControl=control)    
+print(rf_gridsearch)    
+    
 ![image](https://user-images.githubusercontent.com/36289126/39461684-b9f8c014-4cc9-11e8-9b3d-af463bec3902.png)    
-
-plot(rf_gridsearch)
-
-
+    
+plot(rf_gridsearch)    
+    
+![image](https://user-images.githubusercontent.com/36289126/39461748-253f43b6-4cca-11e8-9556-54236dd505a2.png)    
+     
    - Accuracy = .706 ~ 71%    
     
 **Phase 2**:  Modern Data     
