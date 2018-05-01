@@ -87,7 +87,7 @@ I needed the following libraries to run my models:
     library(caret)    
     library(ipred)       
        
-### The models were designed in two phasees:    
+### The models were designed and executed in two phasees:    
 Phase 1: (Includes data in all years listed in the dataset)   
 - Correlation Model  
 - Step AIC    
@@ -104,9 +104,9 @@ Phase 2: Includes only the data from 1990 on (Modern Data)
 - Neural Network    
    
 #### Correlation Matrix
-Phase 1: Looked at all years and used all variables.  
+**Phase 1**: Looked at all years and used all variables.  
     
-Correlations#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
+#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
 df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
 str(df)    
 cor2 = function(df){    
@@ -167,13 +167,13 @@ cor2 = function(df){
 }    
 cor2(df)     
     
--The model tagged the following varaibles as highly correlated:  
+-**The model tagged the following varaibles as highly correlated**:  
        - Domestic($M) and Worldwid($M) = .967
        - Award Ceremony & Award Type = .761    
        
-Phase 2: Modern data and used all variables.    
+**Phase 2**: Modern data and used all variables.    
     
-#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
+#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):        
 df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
 str(df)    
 cor2 = function(df){    
@@ -186,7 +186,7 @@ cor2 = function(df){
       
   cor_fun <- function(pos_1, pos_2){    
         
-    # both are numeric    
+    #both are numeric    
     if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
        class(df[[pos_2]]) %in% c("integer", "numeric")){    
       r <- stats::cor(df[[pos_1]]    
@@ -195,7 +195,7 @@ cor2 = function(df){
       )    
     }    
         
-    # one is numeric and other is a factor/character    
+    #one is numeric and other is a factor/character    
     if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
        class(df[[pos_2]]) %in% c("factor", "character")){    
       r <- sqrt(    
@@ -210,7 +210,7 @@ cor2 = function(df){
           stats::lm(df[[pos_2]] ~ as.factor(df[[pos_1]])))[["r.squared"]])    
     }    
         
-    # both are factor/character    
+    #both are factor/character    
     if(class(df[[pos_1]]) %in% c("factor", "character") &&   
        class(df[[pos_2]]) %in% c("factor", "character")){    
       r <- lsr::cramersV(df[[pos_1]], df[[pos_2]], simulate.p.value = TRUE)    
@@ -221,7 +221,7 @@ cor2 = function(df){
       
   cor_fun <- Vectorize(cor_fun)    
       
-  # now compute corr matrix    
+  #now compute corr matrix    
   corrmat <- outer(1:ncol(df)    
                    , 1:ncol(df)    
                    , function(x, y) cor_fun(x, y)    
@@ -235,7 +235,7 @@ cor2 = function(df){
 cor2(df)    
     
     
-The model for the modern dataset flagged teh following variables as highly correlated:   
+**The correlation model for the modern dataset flagged teh following variables as highly correlated**:   
 - Domestic($M) and Worldwid($M) = .967      
 - Award Ceremony & Award Type = .761     
     
