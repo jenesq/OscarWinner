@@ -29,8 +29,8 @@ The fourth dataset was created in R using SQL by bringing together the three abo
 I completed this project using R and Tableau.  The joining of tables, (GLM) Regression, Random Forest, and a Neuralnet were built within R.  The exploratory data was completed in Tableau.  
 
 ## Data cleaning and preparation
-Data Preparation    
-- I used the following code in order to combine the three datasets:    
+**Data Preparation**    
+I used the following code in order to combine the three datasets:    
     data = sqldf("SELECT IMDB.*,BudEarn.* FROM IMDB    
     INNER JOIN BudEarn ON IMDB.Title = BudEarn.Movie")    
     str(data)    
@@ -40,16 +40,16 @@ Data Preparation
     data$FilmName=NULL    
     data     
     
-- Viewing the data:     
+Viewing the data:     
     str(data)    
     summary(data)      
       
-The final data variables in the combined dataset are: movieid, title, year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6,  r7, r8, r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M),       domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.  
+**The final data variables in the combined dataset are**: movieid, title, year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6,  r7, r8, r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M),       domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.  
     
-Exporting dataset to excel to make sure it is what I want and to use for EDA in Tableau    
+**Exporting dataset** to excel to make sure it is what I want and to use for EDA in Tableau    
     write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx") 
     
-- Data Cleaning
+**Data Cleaning**
 I quickly realized I had variables that needed to be converted when I looked at the structure:       
     str(data)    
     data$budget=as.numeric(data$budget)    
