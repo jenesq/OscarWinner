@@ -49,7 +49,7 @@ Viewing the data:
 **Exporting dataset** to excel to make sure it is what I want and to use for EDA in Tableau    
     write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx") 
     
-**Data Cleaning**
+**Data Cleaning**    
 I quickly realized I had variables that needed to be converted when I looked at the structure:       
     str(data)    
     data$budget=as.numeric(data$budget)    
@@ -88,14 +88,14 @@ I needed the following libraries to run my models:
     library(ipred)       
        
 ### The models were designed and executed in two phasees:    
-Phase 1: (Includes data in all years listed in the dataset)   
+**Phase 1**: (Includes data in all years listed in the dataset)   
 - Correlation Model  
 - Step AIC    
 - GLM Model with AIC    
 - GLM MOdel without AIC    
 - Random Forest Model with Grid Search    
     
-Phase 2: Includes only the data from 1990 on (Modern Data)    
+**Phase 2**: Includes only the data from 1990 on (Modern Data)    
 - Correclaton Model with a subet of data for 1990 on    
 - Step AIC    
 - GLM Model with AIC     
@@ -103,10 +103,10 @@ Phase 2: Includes only the data from 1990 on (Modern Data)
 - Random Forest Model with Grid Search    
 - Neural Network    
    
-#### Correlation Matrix
-**Phase 1**: Looked at all years and used all variables.  
+#### Correlation Matrix    
+**Phase 1**: Looked at all years and used all variables.   
     
-#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):    
+#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):     
 df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
 str(df)    
 cor2 = function(df){    
@@ -168,10 +168,10 @@ cor2 = function(df){
 cor2(df)     
     
 -**The model tagged the following varaibles as highly correlated**:  
-       - Domestic($M) and Worldwid($M) = .967
+       - Domestic($M) and Worldwid($M) = .967    
        - Award Ceremony & Award Type = .761    
        
-**Phase 2**: Modern data and used all variables.    
+**Phase 2**: Modern data and used all variables.      
     
 #Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):        
 df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
@@ -239,14 +239,20 @@ cor2(df)
 - Domestic($M) and Worldwid($M) = .967      
 - Award Ceremony & Award Type = .761     
     
-
+    
 #### Step AIC    
-Phase 1: (Includes data in all years listed in the dataset).  
+**Phase 1**: (Includes data in all years listed in the dataset)  
+    
+df$AwardWinner=as.numeric(df$AwardWinner)    
+AICMod <- glm(AwardWinner ~ ., data=df)    
+modelAward.AIC <- stepAIC(AICMod, direction=c("both"))    
+modelAward.AIC    
+    
 The following 10 variables were selected from the original 17 variables after the Step AIC process:       
 - AwardWinner, length, budget, rating, action, romance, month, releaseYear, AwardType, worldwideGross($M)    
     
-Phase 2: Modern data using inputting all 17 variables. 
-he following 9 variables were selected from the original 17 variables after the Step AIC process:    
+**Phase 2**: (Modern data)   
+The following 9 variables were selected from the original 17 variables after the Step AIC process:    
 - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
 
     
