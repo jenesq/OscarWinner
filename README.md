@@ -101,7 +101,11 @@ I needed the following libraries to run my models:
 - GLM Model with AIC     
 - GLM MOdel withou AIC     
 - Random Forest Model with Grid Search    
-- Neural Network    
+- Neural Network       
+    
+#Subset for 1990 on (finding the modern data only for Phase 2):   
+dataModern <-subset(data, ReleaseYear >="1990")   
+str(dataModern)   
    
 #### Correlation Matrix    
 **Phase 1**: Looked at all years and used all variables.   
@@ -286,6 +290,8 @@ testset = subset(df2, split == FALSE)
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
 summary(modelAward)    
     
+    
+    
 predAward<-predict(modelAward,testset)    
 predAward2<- ifelse(c(predAward) > 0,1,0)    
 predictAward3=as.vector(predAward2)    
@@ -326,7 +332,9 @@ trainset = subset(df, split == TRUE)
 testset = subset(df, split == FALSE)    
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
 summary(modelAward)    
-    
+  
+![image](https://user-images.githubusercontent.com/36289126/39462221-21979666-4ccd-11e8-9168-de7fc4cc5741.png)    
+      
 predAward<-predict(modelAward,testset)    
 predAward2<- ifelse(c(predAward) > 0,1,0)    
 predictAward3=as.vector(predAward2)    
@@ -334,14 +342,14 @@ table(testset$AwardWinner, predictAward3)
 AccuracyAIC <-(166+37)/(166+37+65+26)    
 AccuracyAIC    
 
-   - Accuracy = .725 ~ 73%    
+   - Accuracy = .753 ~ 75%    
    
 - Running with all original variables:    
    - Accuracy = .690 ~ 69%    
    
 #### Random Forest Models      
 **Phase 1**: All Data       
-- Running with all original variables:      
+Running with all original variables:      
     
 df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
 df=na.exclude(df)    
@@ -360,21 +368,59 @@ plot(rf_gridsearch)
     
 ![image](https://user-images.githubusercontent.com/36289126/39461748-253f43b6-4cca-11e8-9556-54236dd505a2.png)    
      
-   - Accuracy = .706 ~ 71%    
+   - Accuracy = .728 ~ 73%    
     
 **Phase 2**:  Modern Data     
-- Running with all original variables:     
-   - Accuracy = .747 ~ 75%    
-
-#### Neural Network with the Modern Data
+Running with all original variables:  
+    
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
+df=na.exclude(df)    
+df$Domestic=as.vector(df$`DomesticGross($M)`)    
+df$WorldWide=as.vector(df$`WorldwideGross($M)`)    
+df$`DomesticGross($M)`=NULL    
+df$`WorldwideGross($M)`=NULL    
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")    
+tunegrid <- expand.grid(.mtry=c(1:15))    
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid=tunegrid, trControl=control)    
+print(rf_gridsearch)    
+    
+![image](https://user-images.githubusercontent.com/36289126/39463174-a4904fb2-4cd3-11e8-97b4-d5d51a8a2463.png)    
+    
+plot(rf_gridsearch)   
+    
+![image](https://user-images.githubusercontent.com/36289126/39463197-bc756824-4cd3-11e8-94e1-c87124143e5c.png)    
+    
+   - Accuracy = .755 ~ 76%    
+    
+#### Neural Network with the Modern Data    
 **Phase 1**: All Data      
-- I did not run with all the data.  
+I did not run with all the data.  
     
 **Phase 2**: Modern Data   
-- Running with all original variables:     
-   - Accuracy = .660 ~ 66%   
+Running with all original variables:  
+    
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33, 34,31)]    
+df=na.exclude(df)    
+df$Domestic=as.vector(df$`DomesticGross($M)`)    
+df$WorldWide=as.vector(df$`WorldwideGross($M)`)    
+df$`DomesticGross($M)`=NULL    
+df$`WorldwideGross($M)`=NULL    
+control <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")    
+grid <- expand.grid(size=c(5,10,20,50), k=c(1,2,3,4,5))    
+rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="lvq", tuneGrid=grid, trControl=control,  tuneLength=5)    
+print(rf_gridsearch)     
 
 
+![image](https://user-images.githubusercontent.com/36289126/39463147-77150bb8-4cd3-11e8-8a98-58e3138a2ff3.png)    
+
+
+   - **Accuracy = .660 ~ 66%**   
+   
+plot(rf_gridsearch)    
+
+![image](https://user-images.githubusercontent.com/36289126/39463259-30e082ca-4cd4-11e8-8d47-f8ba48b94b74.png)    
+    
+    
 ## Analysis results    
 
 
