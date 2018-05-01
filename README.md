@@ -77,15 +77,15 @@ Most of the data exploration was performed in Tableau and moved to Tableu Public
 
 ## Building the Models in R:    
 I needed the following libraries to run my models:    
-    library(sqldf)
-    library(readxl)
-    library(lubridate)
-    library(caTools)
-    library(caret)
-    library(MASS)
-    library(neuralnet)
-    library(caret)
-    library(ipred)      
+    library(sqldf)    
+    library(readxl)    
+    library(lubridate)    
+    library(caTools)    
+    library(caret)    
+    library(MASS)    
+    library(neuralnet)    
+    library(caret)    
+    library(ipred)       
        
 ### The models were designed in two phasees:    
 Phase 1: (Includes data in all years listed in the dataset)   
@@ -119,7 +119,7 @@ cor2 = function(df){
       
   cor_fun <- function(pos_1, pos_2){    
     
-    # both are numeric    
+    #both are numeric    
     if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
        class(df[[pos_2]]) %in% c("integer", "numeric")){    
       r <- stats::cor(df[[pos_1]]    
@@ -128,7 +128,7 @@ cor2 = function(df){
       )    
     }    
         
-    # one is numeric and other is a factor/character    
+    #one is numeric and other is a factor/character    
     if(class(df[[pos_1]]) %in% c("integer", "numeric") &&    
        class(df[[pos_2]]) %in% c("factor", "character")){    
       r <- sqrt(    
@@ -143,7 +143,7 @@ cor2 = function(df){
           stats::lm(df[[pos_2]] ~ as.factor(df[[pos_1]])))[["r.squared"]])    
     }    
         
-    # both are factor/character    
+    #both are factor/character    
     if(class(df[[pos_1]]) %in% c("factor", "character") &&    
        class(df[[pos_2]]) %in% c("factor", "character")){    
       r <- lsr::cramersV(df[[pos_1]], df[[pos_2]], simulate.p.value = TRUE)    
@@ -154,7 +154,7 @@ cor2 = function(df){
       
   cor_fun <- Vectorize(cor_fun)    
       
-  # now compute corr matrix    
+  #now compute corr matrix    
   corrmat <- outer(1:ncol(df)    
                    , 1:ncol(df)    
                    , function(x, y) cor_fun(x, y)    
@@ -167,7 +167,7 @@ cor2 = function(df){
 }    
 cor2(df)     
     
-The model tagged the following varaibles as highly correlated:  
+-The model tagged the following varaibles as highly correlated:  
        - Domestic($M) and Worldwid($M) = .967
        - Award Ceremony & Award Type = .761    
        
