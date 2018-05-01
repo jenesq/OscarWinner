@@ -268,18 +268,72 @@ modelAward.AIC
         
 **The following 9 variables were selected from the original 17 variables after the Step AIC process**:          
 - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)        
-
+    
     
 #### GLM Models    
 **Phase 1**: All Data       
-- Running with only the AIC variables:    
-   - Accuracy = .708 ~ 71%    
+- **Running with only the AIC variables**:   
+str(df)    
+df2=df[,c(1,2,3,4,7,11,12,13,16,17)]    
+str(df2)    
+    
+df2$AwardWinner[df2$AwardWinner == "1"] = "0"    
+df2$AwardWinner[df2$AwardWinner == "2"] = "1"    
+df2$AwardWinner=as.factor(df2$AwardWinner)    
+split = sample.split(df2$AwardWinner, SplitRatio = 0.7)    
+trainset = subset(df2, split == TRUE)    
+testset = subset(df2, split == FALSE)    
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
+summary(modelAward)    
+    
+predAward<-predict(modelAward,testset)    
+predAward2<- ifelse(c(predAward) > 0,1,0)    
+predictAward3=as.vector(predAward2)    
+table(testset$AwardWinner, predictAward3)    
+AccuracyAIC <-(250+54)/(250+54+87+38)    
+AccuracyAIC    
+    
+  - **Accuracy = .708 ~ 71%**    
    
-- Running with all original variables:    
-   - Accuracy = .690 ~ 69%    
+- **Running with all original variables**:  
+    
+df$AwardWinner[df$AwardWinner == "1"] = "0"    
+df$AwardWinner[df$AwardWinner == "2"] = "1"    
+df$AwardWinner=as.factor(df$AwardWinner)    
+split = sample.split(df$AwardWinner, SplitRatio = 0.8)    
+trainset = subset(df, split == TRUE)    
+testset = subset(df, split == FALSE)    
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
+summary(modelAward)    
+    
+predAward<-predict(modelAward,testset)    
+predAward2<- ifelse(c(predAward) > 0,1,0)    
+predictAward3=as.vector(predAward2)    
+table(testset$AwardWinner, predictAward3)    
+AccuracyAIC <-(166+37)/(166+37+65+26)    
+AccuracyAIC    
+
+   - **Accuracy = .690 ~ 69%**    
     
 **Phase 2**: Modern Data    
 - Running with only the AIC variables:    
+    
+df$AwardWinner[df$AwardWinner == "1"] = "0"    
+df$AwardWinner[df$AwardWinner == "2"] = "1"    
+df$AwardWinner=as.factor(df$AwardWinner)    
+split = sample.split(df$AwardWinner, SplitRatio = 0.8)    
+trainset = subset(df, split == TRUE)    
+testset = subset(df, split == FALSE)    
+modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
+summary(modelAward)    
+    
+predAward<-predict(modelAward,testset)    
+predAward2<- ifelse(c(predAward) > 0,1,0)    
+predictAward3=as.vector(predAward2)    
+table(testset$AwardWinner, predictAward3)    
+AccuracyAIC <-(166+37)/(166+37+65+26)    
+AccuracyAIC    
+
    - Accuracy = .725 ~ 73%    
    
 - Running with all original variables:    
@@ -288,6 +342,13 @@ modelAward.AIC
 #### Random Forest Models    
 **Phase 1**: All Data       
 - Running with all original variables:    
+
+
+
+
+
+
+
    - Accuracy = .706 ~ 71%    
     
 **Phase 2**:  Modern Data     
