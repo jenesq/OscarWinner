@@ -247,11 +247,23 @@ df$AwardWinner=as.numeric(df$AwardWinner)
 AICMod <- glm(AwardWinner ~ ., data=df)    
 modelAward.AIC <- stepAIC(AICMod, direction=c("both"))    
 modelAward.AIC    
+
+![image](https://user-images.githubusercontent.com/36289126/39460827-c655f3e6-4cc3-11e8-8de4-d4f930521883.png)    
+    
     
 The following 10 variables were selected from the original 17 variables after the Step AIC process:       
 - AwardWinner, length, budget, rating, action, romance, month, releaseYear, AwardType, worldwideGross($M)    
     
+    
 **Phase 2**: (Modern data)   
+    
+df$AwardWinner=as.numeric(df$AwardWinner)    
+AICMod <- glm(AwardWinner ~ ., data=df)    
+modelAward.AIC <- stepAIC(AICMod, direction=c("both"))    
+modelAward.AIC    
+
+
+
 The following 9 variables were selected from the original 17 variables after the Step AIC process:    
 - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
 
