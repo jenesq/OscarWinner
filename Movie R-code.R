@@ -55,6 +55,12 @@ summary(data)
 dim(data)
 str(data)
 
+#######################################################################################################################
+######################################################################################################################
+
+#PHASE 1:
+
+
 ## Look at Correlations#Correlations Matrix (Function borrowed from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b):
 df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]
 str(df)
@@ -121,7 +127,8 @@ df$AwardWinner=as.numeric(df$AwardWinner)
 AICMod <- glm(AwardWinner ~ ., data=df)
 modelAward.AIC <- stepAIC(AICMod, direction=c("both"))
 modelAward.AIC
-#Used the AIC results to select variables for glm
+
+#Used the AIC results to select variables for GLM
 str(df)
 df2=df[,c(1,2,3,4,7,11,12,13,16,17)]
 str(df2)
@@ -152,6 +159,7 @@ trainset = subset(df, split == TRUE)
 testset = subset(df, split == FALSE)
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")
 summary(modelAward)
+
 predAward<-predict(modelAward,testset)
 predAward2<- ifelse(c(predAward) > 0,1,0)
 predictAward3=as.vector(predAward2)
@@ -160,7 +168,7 @@ AccuracyAIC <-(166+37)/(166+37+65+26)
 AccuracyAIC
 
 #Random Forest Model Grid Search
-df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
+df=data[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]
 df=na.exclude(df)
 df$Domestic=as.vector(df$`DomesticGross($M)`)
 df$WorldWide=as.vector(df$`WorldwideGross($M)`)
@@ -172,6 +180,11 @@ rf_gridsearch <- train(as.factor(AwardWinner) ~., data=df, method="rf", tuneGrid
 print(rf_gridsearch)
 plot(rf_gridsearch)
 
+
+##########################################################################################################################
+##########################################################################################################################
+
+##PHASE 2##
 
 #Subset for 1990 on:
 dataModern <-subset(data, ReleaseYear >="1990")
@@ -244,6 +257,7 @@ df$AwardWinner=as.numeric(df$AwardWinner)
 AICMod <- glm(AwardWinner ~ ., data=df)
 modelAward.AIC <- stepAIC(AICMod, direction=c("both"))
 modelAward.AIC
+
 #Used the AIC results to select variables for glm - Modern Data
 str(df)
 df2=df[,c(1,2,3,4,7,8,11,13,17)]
@@ -258,16 +272,17 @@ trainset = subset(df2, split == TRUE)
 testset = subset(df2, split == FALSE)
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")
 summary(modelAward)
+
 predAward<-predict(modelAward,testset)
 predAward2<- ifelse(c(predAward) > 0,1,0)
 predictAward3=as.vector(predAward2)
 table(testset$AwardWinner, predictAward3)
-AccuracyAIC <-(146+15)/(146+15+42+4)
+AccuracyAIC <-(156+12)/(156+12+49+6)
 AccuracyAIC
 
 
 #Random Forest Model-Modern data
-df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]
 df=na.exclude(df)
 df$Domestic=as.vector(df$`DomesticGross($M)`)
 df$WorldWide=as.vector(df$`WorldwideGross($M)`)
@@ -280,7 +295,7 @@ print(rf_gridsearch)
 plot(rf_gridsearch)
 
 #Neural Network Model-Modern data
-df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,31)]
+df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33, 34,31)]
 df=na.exclude(df)
 df$Domestic=as.vector(df$`DomesticGross($M)`)
 df$WorldWide=as.vector(df$`WorldwideGross($M)`)
