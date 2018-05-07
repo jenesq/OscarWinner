@@ -13,7 +13,6 @@ My project inspiration was to answer the following questions:
 - Build a model that predicts the next Oscar winner in any Academy Award category by inputting the nominated movies.    
 - Determine what variables are significant in predicting an Oscar winning movie?    
 - Are movie rankings directly correlated to Oscar winning movies?    
-- Are there any trends between movie genre and sales?    
 - Is there a relationship between IMDB rating, number of votes, and Oscar winners?    
 
 ## Observations on the quality of the data    
@@ -24,19 +23,27 @@ The three datasets were user friendly and consistantly formated
     
 The fourth dataset was created in R using SQL by bringing together the three above datasets.        
 - Dataset 4: Combined Dataset - 2,143 observations and 36 variables    
-    
-## Process for project
-I completed this project using R and Tableau.  The joining of tables, (GLM) Regression, Random Forest, and a Neuralnet were built within R.  The exploratory data was completed in Tableau.  
 
-## Data cleaning and preparation
+Running cluster models was not necesary for this project, because the outliers should not be deleted or ignored.    
+The outliers where movies that had done particulary well.
+    
+## Process for project/Major tools used
+I completed this project using R and Tableau.  The joining of tables, (GLM) Regression, Random Forest, and a Neuralnet were built within R.  The exploratory data was completed in Tableau.  
+    
+The R Code is located at https://github.com/jenesq/OscarWinner/blob/master/Movie%20R-code.R    
+The Tableau tables are located at https://public.tableau.com/profile/jenny6450#!/     
+The Tableau table descriptions are located at https://github.com/jenesq/OscarWinner/blob/master/TableauPublic%20Charts.md    
+My Oscar presentation is loocated at https://www.youtube.com/watch?v=gDFGiIjSD_w    
+    
+## Data cleaning and preparation    
 **Data Preparation**    
-I used the following code in order to combine the three datasets:    
+I used the following code in order to combine the three datasets and create my final dataset:    
     data = sqldf("SELECT IMDB.*,BudEarn.* FROM IMDB    
     INNER JOIN BudEarn ON IMDB.Title = BudEarn.Movie")    
     str(data)    
     data$Movie=NULL    
     data = sqldf("SELECT data.*,Academy.* FROM data    
-    INNER JOIN Academy ON data.title = Academy.FilmName")    
+    INNER JOIN Academy ON data.title = Academy.FilmName")        
     data$FilmName=NULL    
     data     
     
@@ -46,11 +53,11 @@ Viewing the data:
       
 **The final data variables in the combined dataset are**: movieid, title, year, length, budget, rating, votes, r1, r2, r3, r4, r5, r6,  r7, r8, r9, r10, mpaa, action, animation, comedy, drama, documentary, romance, short, month, day, releaseyear, budget($M),       domesticGross($M), worldwideGross($M), awardyear, awardceremony, awardtype, awardWinner, awardnomineename.  
     
-**Exporting dataset** to excel to make sure it is what I want and to use for EDA in Tableau    
+**Exporting dataset** to excel to make ensure the inner joins were correct in the SQL script.  This dataset was also used in addition to my three downloaded datasets for EDA in Tableau.        
     write.csv(data, "C:/Users/Jenny Esquibel/Dropbox/Jenny Folder/Data Science Masters/MSDS 696 - Practicum II/CurrentMovieData.xlsx") 
     
 **Data Cleaning**    
-I quickly realized I had variables that needed to be converted when I looked at the structure:       
+I quickly realized I had variables that needed to be converted when I looked at the original structure.  Below is the code used to convert the variables:           
     str(data)    
     data$budget=as.numeric(data$budget)    
     data$mpaa=as.factor(data$mpaa)    
@@ -74,7 +81,13 @@ I quickly realized I had variables that needed to be converted when I looked at 
   
 ## Exploratory Data Analysis (EDA):    
 Most of the data exploration was performed in Tableau and moved to Tableu Public.  All chart descriptions are in the TableauPublic Charts.md file in this project.  The direct link to Tableau Public page is https://public.tableau.com/profile/jenny6450#!/.    
+The charts are also available in the Oscar presentation at https://www.youtube.com/watch?v=gDFGiIjSD_w.    
+    
+This is one image of the many images created while exploring the data.    
+![image](https://user-images.githubusercontent.com/36289126/39683487-1d446d8c-5173-11e8-959b-cf2abd04e824.png)    
 
+The scatterplot is of movie ratings and number of votes for each movie.   The Fellowship of the Ring, Shawshank Redemption, and The Matrix had the most number of votes, but not the highest max ratings.    
+    
 ## Building the Models in R:    
 I needed the following libraries to run my models:    
     library(sqldf)    
@@ -171,7 +184,7 @@ cor2 = function(df){
 }    
 cor2(df)     
     
--**The model tagged the following varaibles as highly correlated**:  
+-**The model tagged the following varaibles as highly correlated**:   
        - Domestic($M) and Worldwid($M) = .967    
        - Award Ceremony & Award Type = .761    
        
@@ -239,7 +252,7 @@ cor2 = function(df){
 cor2(df)    
     
     
-**The correlation model for the modern dataset flagged teh following variables as highly correlated**:   
+**The correlation model for the modern dataset flagged the following variables as highly correlated**:   
 - Domestic($M) and Worldwid($M) = .967      
 - Award Ceremony & Award Type = .761     
     
@@ -290,8 +303,6 @@ testset = subset(df2, split == FALSE)
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
 summary(modelAward)    
     
-    
-    
 predAward<-predict(modelAward,testset)    
 predAward2<- ifelse(c(predAward) > 0,1,0)    
 predictAward3=as.vector(predAward2)    
@@ -306,19 +317,19 @@ AccuracyAIC
 df$AwardWinner[df$AwardWinner == "1"] = "0"    
 df$AwardWinner[df$AwardWinner == "2"] = "1"    
 df$AwardWinner=as.factor(df$AwardWinner)    
-split = sample.split(df$AwardWinner, SplitRatio = 0.8)    
+split = sample.split(df$AwardWinner, SplitRatio = 0.8)        
 trainset = subset(df, split == TRUE)    
 testset = subset(df, split == FALSE)    
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
 summary(modelAward)    
     
 predAward<-predict(modelAward,testset)    
-predAward2<- ifelse(c(predAward) > 0,1,0)    
+predAward2<- ifelse(c(predAward) > 0,1,0)      
 predictAward3=as.vector(predAward2)    
 table(testset$AwardWinner, predictAward3)    
 AccuracyAIC <-(166+37)/(166+37+65+26)    
 AccuracyAIC    
-
+    
    - **Accuracy = .690 ~ 69%**    
     
 **Phase 2**: Modern Data    
@@ -332,11 +343,11 @@ trainset = subset(df, split == TRUE)
 testset = subset(df, split == FALSE)    
 modelAward <- glm(AwardWinner ~ ., data=trainset,family="binomial")    
 summary(modelAward)    
-  
+    
 ![image](https://user-images.githubusercontent.com/36289126/39462221-21979666-4ccd-11e8-9168-de7fc4cc5741.png)    
       
 predAward<-predict(modelAward,testset)    
-predAward2<- ifelse(c(predAward) > 0,1,0)    
+predAward2<- ifelse(c(predAward) > 0,1,0)      
 predictAward3=as.vector(predAward2)    
 table(testset$AwardWinner, predictAward3)    
 AccuracyAIC <-(166+37)/(166+37+65+26)    
@@ -371,7 +382,7 @@ plot(rf_gridsearch)
    - Accuracy = .728 ~ 73%    
     
 **Phase 2**:  Modern Data     
-Running with all original variables:  
+Running with all original variables:   
     
 df=dataModern[,c(35,4,5,6,7,18,19,20,21,22,24,26,28,30,33,34,31)]    
 df=na.exclude(df)    
@@ -412,19 +423,33 @@ print(rf_gridsearch)
 
 
 ![image](https://user-images.githubusercontent.com/36289126/39463147-77150bb8-4cd3-11e8-8a98-58e3138a2ff3.png)    
-
-
+    
+    
    - **Accuracy = .660 ~ 66%**   
    
 plot(rf_gridsearch)    
-
+    
 ![image](https://user-images.githubusercontent.com/36289126/39463259-30e082ca-4cd4-11e8-8d47-f8ba48b94b74.png)    
     
     
 ## Analysis results    
-
-
+- The best performing prediction model was the Random Forest running with only the Modern data (76%)     
+- The following variables are significant in predicting an Oscar winning movie:    
+ - AwardWinner, length, budget, rating, action, animation, romance, releaseYear, worldwideGross($M)    
+- Drama is the genre that wins the most Oscar awards    
+- Ben-Hur and Titanic each won 10 awards which is the most in Oscar history.    
+- There is no relationship between IMDB rating, number of votes, and Oscar winners    
     
+## Conclusion    
+- For this project a model predicting winners, had a 69% random guessing baseline (no information rate).  
+- I was able to build models that a higher accuracy rate than random guessing.  I am looking forward to running the model on the next nominations.   
+- The data showed there has been a significant increase in movies being produced each year since 1914 (slide 37, 38, 39).    
+- Interestingly, there is not a strong correlation between nominations and wins.    
+- No matter what film wins the awards going to the movies is a great time!     
+    
+ Thank you!       
+
+
 ## References:    
 
  
