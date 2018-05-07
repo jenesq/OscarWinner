@@ -83,7 +83,8 @@ I quickly realized I had variables that needed to be converted when I looked at 
 Most of the data exploration was performed in Tableau and moved to Tableu Public.  All chart descriptions are in the TableauPublic Charts.md file in this project.  The direct link to Tableau Public page is https://public.tableau.com/profile/jenny6450#!/.    
 The charts are also available in the Oscar presentation at https://www.youtube.com/watch?v=gDFGiIjSD_w.    
     
-This is one image of the many images created while exploring the data.    
+This is one image of the many images created while exploring the data.  
+    
 ![image](https://user-images.githubusercontent.com/36289126/39683487-1d446d8c-5173-11e8-959b-cf2abd04e824.png)    
 
 The scatterplot is of movie ratings and number of votes for each movie.   The Fellowship of the Ring, Shawshank Redemption, and The Matrix had the most number of votes, but not the highest max ratings.    
@@ -268,7 +269,7 @@ modelAward.AIC
 ![image](https://user-images.githubusercontent.com/36289126/39460827-c655f3e6-4cc3-11e8-8de4-d4f930521883.png)    
     
     
-The following 10 variables were selected from the original 17 variables after the Step AIC process:       
+**The following 10 variables were selected from the original 17 variables after the Step AIC process:**       
 - AwardWinner, length, budget, rating, action, romance, month, releaseYear, AwardType, worldwideGross($M)    
     
     
