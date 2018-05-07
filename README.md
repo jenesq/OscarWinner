@@ -452,5 +452,8 @@ plot(rf_gridsearch)
 
 
 ## References:    
-
- 
+Github.com (2018). Awards. Retrieved from https://gist.github.com/talegari/b514dbbc651c25e2075d88f31d48057b.    
+    
+Oscars (2018). Oscars. Retrieved from http://www.oscars.org/Oscars.   
+    
+Wikipedia (2018). Academy Awards. Retrieved from https://en.Wikipedia.org/wiki/Academy Awards.    
