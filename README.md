@@ -446,7 +446,7 @@ plot(rf_gridsearch)
 - I was able to build models that a higher accuracy rate than random guessing.  I am looking forward to running the model on the next nominations.   
 - The data showed there has been a significant increase in movies being produced each year since 1914 (slide 37, 38, 39).    
 - Interestingly, there is not a strong correlation between nominations and wins.    
-- No matter what film wins the awards going to the movies is a great time!     
+- No matter what film wins the awards going to the movies is a great time!   
     
  Thank you!       
 
@@ -456,4 +456,4 @@ Github.com (2018). Awards. Retrieved from https://gist.github.com/talegari/b514d
     
 Oscars (2018). Oscars. Retrieved from http://www.oscars.org/Oscars.   
     
-Wikipedia (2018). Academy Awards. Retrieved from https://en.Wikipedia.org/wiki/Academy Awards.    
+Wikipedia (2018). Academy Awards. Retrieved from https://en.Wikipedia.org/wiki/AcademyAwards.    
